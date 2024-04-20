@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #student_info {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #student_info p {
+            margin: 10px 0;
+        }
+
+        #student_info p strong {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Get Student Information</h1>
+        <form action="/get_student_info" method="GET">
+            <label for="student_user_id">Enter Student User ID:</label><br>
+            <input type="text" id="student_user_id" name="student_user_id"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <div id="student_info"></div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const studentUserId = document.getElementById('student_user_id').value;
+            const response = await fetch(`/get_student_info?student_user_id=${studentUserId}`);
+            const data = await response.json();
+            const studentInfoDiv = document.getElementById('student_info');
+            studentInfoDiv.innerHTML = '';
+
+            if (response.status === 200) {
+                const studentInfo = `
+                    <p><strong>Student ID:</strong> ${data['Student ID']}</p>
+                    <p><strong>Title:</strong> ${data['Title']}</p>
+                    <p><strong>Student Institute Name:</strong> ${data['Student Institute Name']}</p>
+                    <p><strong>Verification:</strong> ${data['Verification']}</p>
+                    <p><strong>Duration:</strong> ${data['Duration']}</p>
+                `;
+                studentInfoDiv.innerHTML = studentInfo;
+            } else {
+                studentInfoDiv.innerHTML = `<p>${data['message']}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
